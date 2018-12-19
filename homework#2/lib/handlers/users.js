@@ -36,7 +36,7 @@ users.post = function insertingProfileData(data, callback) {
 						hashedPassword,
 						streetAddress
 					}
-					_data.create('users', phone, postData, function (err) {
+					_data.create('users', email, postData, function (err) {
 						if(!err) {
 							callback(200);
 						} else {
