@@ -16,8 +16,7 @@ let tokens = {};
 tokens.post = function insertingTokenData(data, callback) {
 	let email = typeof(data.payload.email) == 'string' && data.payload.email.trim().length > 0 ? data.payload.email.trim() : false;
 	let password = typeof(data.payload.password) == 'string' && data.payload.password.trim().length > 0 ? data.payload.password.trim() : false;
-	let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-	if (re.test(String(email).toLowerCase()) && password) {
+	if (helpers.validateEmail(email) && password) {
 		//lookup for the user with the phone number
 		_data.read('users', email, function (err, userData) {
 			if(!err && userData) {

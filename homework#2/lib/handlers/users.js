@@ -21,9 +21,8 @@ users.post = function insertingProfileData(data, callback) {
 	let phone = typeof(data.payload.phone) == 'string' && data.payload.phone.trim().length == 10 ? data.payload.phone.trim() : false;
 	let password = typeof(data.payload.password) == 'string' && data.payload.password.trim().length > 0 ? data.payload.password.trim() : false;
 	let streetAddress = typeof(data.payload.streetAddress) == 'string' && data.payload.streetAddress.trim().length > 0 ? data.payload.streetAddress.trim() : false;
-	let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-	if( firstname && lastname && re.test(String(email).toLowerCase()) && phone && password && streetAddress) {
+	if( firstname && lastname && helpers.validateEmail(email) && phone && password && streetAddress) {
 		_data.read('users', email, function (err, fileData) {
 			if( err ) {
 				let hashedPassword = helpers.hash(password);
@@ -63,8 +62,7 @@ users.post = function insertingProfileData(data, callback) {
 // optional data : none
 users.get = function readingProfileData (data, callback) {
 	let email = typeof(data.queryStringObject.email) == 'string' && data.queryStringObject.email.trim().length > 0 ? data.queryStringObject.email.trim() : false;
-	let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-	if (re.test(String(email).toLowerCase())) {
+	if (helpers.validateEmail(email)) {
 		// get the tokens from the headers
 		let token = typeof(data.headers.token) == 'string' ? data.headers.token: false;
 		//verify that the given token is valid for the email id
@@ -95,8 +93,7 @@ users.get = function readingProfileData (data, callback) {
 users.put = function modifyProfileData (data, callback) {
 	//check for the required field
 	let email = typeof(data.queryStringObject.email) == 'string' && data.queryStringObject.email.trim().length > 0 ? data.queryStringObject.email.trim() : false;
-	let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-	if (re.test(String(email).toLowerCase())) {
+	if (helpers.validateEmail(email)) {
 		// check for the optional fields
 		let firstname = typeof(data.payload.firstname) == 'string' && data.payload.firstname.trim().length > 0 ? data.payload.firstname.trim() : false;
 		let lastname = typeof(data.payload.lastname) == 'string' && data.payload.lastname.trim().length > 0 ? data.payload.lastname.trim() : false;
@@ -157,8 +154,7 @@ users.put = function modifyProfileData (data, callback) {
 // optional data : none
 users.delete = function delereProfileData (data, callback) {
 	let email = typeof(data.queryStringObject.email) == 'string' && data.queryStringObject.email.trim().length > 0 ? data.queryStringObject.email.trim() : false;
-	let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-	if (re.test(String(email).toLowerCase())) {
+	if (helpers.validateEmail(email)) {
 		// get the tokens from the headers
 		let token = typeof(data.headers.token) == 'string' ? data.headers.token: false;
 		//verify that the given token is valid for the email id
