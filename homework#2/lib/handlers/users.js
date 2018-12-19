@@ -67,7 +67,7 @@ users.get = function readingProfileData (data, callback) {
 	if (re.test(String(email).toLowerCase())) {
 		// get the tokens from the headers
 		let token = typeof(data.headers.token) == 'string' ? data.headers.token: false;
-		//verify that the given token is valid for the phone number
+		//verify that the given token is valid for the email id
 		_tokens.verifyToken(token, email, function (tokenIsValid) {
 			if(tokenIsValid) {
 				//lookup the user
@@ -90,7 +90,7 @@ users.get = function readingProfileData (data, callback) {
 }
 
 // Users PUT
-// required data: firstname or lastname or password
+// required data: firstname or lastname or password or phone or streetAddress
 // optional data : none
 users.put = function modifyProfileData (data, callback) {
 	//check for the required field
@@ -107,7 +107,7 @@ users.put = function modifyProfileData (data, callback) {
 		if ( firstname || lastname || password || phone || streetAddress) {
 			// get the tokens from the headers
 			let token = typeof(data.headers.token) == 'string' ? data.headers.token: false;
-			//verify that the given token is valid for the email number
+			//verify that the given token is valid for the email id
 			_tokens.verifyToken(token, email, function (tokenIsValid) {
 				if(tokenIsValid) {
 					//lookup for user
@@ -161,7 +161,7 @@ users.delete = function delereProfileData (data, callback) {
 	if (re.test(String(email).toLowerCase())) {
 		// get the tokens from the headers
 		let token = typeof(data.headers.token) == 'string' ? data.headers.token: false;
-		//verify that the given token is valid for the email number
+		//verify that the given token is valid for the email id
 		_tokens.verifyToken(token, email, function (tokenIsValid) {
 			if(tokenIsValid) {
 				//lookup the user
