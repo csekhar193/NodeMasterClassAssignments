@@ -4,8 +4,10 @@
 */
 
 // Dependencies
-let _users = require('./users');
+let _users  = require('./users');
 let _tokens = require('./tokens');
+let _menu   = require('./menu');
+let _carts   = require('./carts');
 
 // Container for the handlers
 let handlers = {};
@@ -30,9 +32,31 @@ handlers.tokens = function authorization (data, callback) {
 	}
 };
 
+// Handlers for menu
+handlers.menu = function pizzaData (data, callback) {
+	let availableMethods = ['get'];
+	if(availableMethods.indexOf(data.method) > -1) {
+		handlers._menu[data.method](data, callback);
+	} else {
+		callback(405);
+	}
+};
+
+// Handlers for menu
+handlers.menu = function pizzaData (data, callback) {
+	let availableMethods = ['get', 'post', 'delete'];
+	if(availableMethods.indexOf(data.method) > -1) {
+		handlers._carts[data.method](data, callback);
+	} else {
+		callback(405);
+	}
+};
+
 // sub Handlers
-handlers._users = _users;
+handlers._users  = _users;
 handlers._tokens = _tokens;
+handlers._menu	 = _menu;
+handlers._carts	 = _carts;
 
 
 // ping Handler for testing
