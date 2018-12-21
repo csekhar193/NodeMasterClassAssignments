@@ -17,7 +17,7 @@ tokens.post = function insertingTokenData(data, callback) {
 	let email = typeof(data.payload.email) == 'string' && data.payload.email.trim().length > 0 ? data.payload.email.trim() : false;
 	let password = typeof(data.payload.password) == 'string' && data.payload.password.trim().length > 0 ? data.payload.password.trim() : false;
 	if (helpers.validateEmail(email) && password) {
-		//lookup for the user with the phone number
+		//lookup for the user with the email id
 		_data.read('users', email, function (err, userData) {
 			if(!err && userData) {
 				//hash the sent password and compare with the userData password
