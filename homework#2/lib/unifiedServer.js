@@ -42,8 +42,6 @@ server.unifiedServer = (req, res) => {
 
 	req.on('end', () => {
 		buffer += decoder.end();
-		console.log(trimmedPath);
-		console.log(router[trimmedPath]);
 		//Choose the handler this request should go to. If one is not found use not Found handler
 		let chosenHandler = typeof(router[trimmedPath]) !== 'undefined' ? router[trimmedPath] : handlers.notFound;
 

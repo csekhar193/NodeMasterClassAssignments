@@ -27,7 +27,7 @@ users.post = function insertingProfileData(data, callback) {
 			if( err ) {
 				// create new cart for the user
 				let cartId = helpers.createRandomString(20);
-				let cartObject = JSON.stringify([]);
+				let cartObject = [];
 				_data.create('carts', cartId, cartObject, (err) => {
 					if(!err) {
 						// Hash the password
@@ -66,7 +66,6 @@ users.post = function insertingProfileData(data, callback) {
 	} else {
 		callback(400, {'Error': 'Missing Required fields.'});
 	}
-
 };
 
 // Users GET
@@ -175,11 +174,18 @@ users.delete = function delereProfileData (data, callback) {
 				//lookup the user
 				_data.read('users', email, function (err, userData) {
 					if(!err && data) {
-						_data.delete('users', email, function (err) {
-							if (!err) {
-								callback(200);
+						let cartId = userData.cart;
+						_data.delete('carts', cartId, function (err) {
+							if(!err) {
+								_data.delete('users', email, function (err) {
+									if (!err) {
+										callback(200);
+									} else {
+										callback(500, {'Error' : 'Unable to delete the user.'})
+									}
+								});
 							} else {
-								callback(500, {'Error' : 'Unable to delete the user.'})
+								callback(500, {'Error' : 'Unable to delete the user cart.'})
 							}
 						});
 					} else {
