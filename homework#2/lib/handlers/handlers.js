@@ -43,8 +43,8 @@ handlers.menu = function pizzaData (data, callback) {
 };
 
 // Handlers for menu
-handlers.menu = function pizzaData (data, callback) {
-	let availableMethods = ['get', 'post', 'delete'];
+handlers.carts = function pizzaData (data, callback) {
+	let availableMethods = ['get', 'put', 'delete'];
 	if(availableMethods.indexOf(data.method) > -1) {
 		handlers._carts[data.method](data, callback);
 	} else {

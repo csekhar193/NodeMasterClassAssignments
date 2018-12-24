@@ -25,27 +25,39 @@ users.post = function insertingProfileData(data, callback) {
 	if( firstname && lastname && helpers.validateEmail(email) && phone && password && streetAddress) {
 		_data.read('users', email, function (err, fileData) {
 			if( err ) {
-				let hashedPassword = helpers.hash(password);
-				if (hashedPassword) {
-					let postData = {
-						firstname,
-						lastname,
-						email,
-						phone,
-						hashedPassword,
-						streetAddress
-					}
-					_data.create('users', email, postData, function (err) {
-						if(!err) {
-							callback(200);
+				// create new cart for the user
+				let cartId = helpers.createRandomString(20);
+				let cartObject = JSON.stringify([]);
+				_data.create('carts', cartId, cartObject, (err) => {
+					if(!err) {
+						// Hash the password
+						let hashedPassword = helpers.hash(password);
+						if (hashedPassword) {
+							let postData = {
+								firstname,
+								lastname,
+								email,
+								phone,
+								hashedPassword,
+								streetAddress,
+								cart: cartId
+							}
+							// create the user with the given details
+							_data.create('users', email, postData, function (err) {
+								if(!err) {
+									callback(200);
+								} else {
+									console.log(err);
+									callback(500, {'Error': 'Could not create the new user.'});
+								}
+							});
 						} else {
-							console.log(err);
-							callback(500, {'Error': 'Could not create the new user.'});
-						}
-					});
-				} else {
-					callback(400, {'Error': 'Unable to hash the password.'});
-				}
+							callback(400, {'Error': 'Unable to hash the password.'});
+						}	
+					} else {
+						callback(500, {'Error': 'Unable to create a cart for the user.'});
+					}
+				});
 
 			} else {
 				callback(400, {'Error': 'A User with that phone number all ready exits.'});
