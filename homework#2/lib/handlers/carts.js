@@ -117,7 +117,7 @@ carts.get = function getCartData(data, callback) {
 // Method : Delete
 // Required Data: email, id(cartProductId)
 // Optional Data: none
-carts.delete = function getCartData(data, callback) {
+carts.delete = function deleteCartData(data, callback) {
 	let email = typeof(data.queryStringObject.email) == 'string' && data.queryStringObject.email.trim().length > 0 ? data.queryStringObject.email.trim() : false;
 	let cartProductId = typeof(data.queryStringObject.id) == 'string' && data.queryStringObject.id.trim().length > 0 ? data.queryStringObject.id.trim() : false;
 	if (helpers.validateEmail(email) && cartProductId) {

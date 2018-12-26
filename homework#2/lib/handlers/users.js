@@ -175,8 +175,10 @@ users.delete = function delereProfileData (data, callback) {
 				_data.read('users', email, function (err, userData) {
 					if(!err && data) {
 						let cartId = userData.cart;
+						// delete the cart related to the user
 						_data.delete('carts', cartId, function (err) {
 							if(!err) {
+								// delete the user
 								_data.delete('users', email, function (err) {
 									if (!err) {
 										callback(200);

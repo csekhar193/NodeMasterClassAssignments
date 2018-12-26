@@ -12,7 +12,8 @@ let router = {
 	'users' : handlers.users,
 	'tokens': handlers.tokens,
 	'menu'  : handlers.menu,
-	'carts' : handlers.carts
+	'carts' : handlers.carts,
+	'orders': handlers.orders
 };
 
 
