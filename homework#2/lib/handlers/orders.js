@@ -113,5 +113,66 @@ orders.post = function placeAnOrder (data, callback) {
 };
 
 
+// Method : GET
+// Required Data: email
+// Optional Data: none
+orders.get = function getAllOrderDetails (data, callback) {
+	let email      = typeof(data.queryStringObject.email) == 'string' && data.queryStringObject.email.trim().length > 0 ? data.queryStringObject.email.trim() : false;
+	if (helpers.validateEmail(email)) {
+		// get the tokens from the headers
+		let token = typeof(data.headers.token) == 'string' ? data.headers.token: false;
+		//verify that the given token is valid for the email id
+		_tokens.verifyToken(token, email, (tokenIsValid) => {
+			if(tokenIsValid) {
+				// get the user data for the cartId
+				_data.read('users', email, (err, userData) => {
+					if(!err) {
+						// get order ids
+						let orderIds = userData.orders;
+						let orderData = [];
+						orderIds
+							.map(orders.getOrderDetails)
+							.reduce(
+								function(chain, orderPromise){
+									return chain
+										.then(function(){
+											return orderPromise;
+										})
+										.then(function(data){
+											orderData.push(data);
+										});
+								},
+								Promise.resolve() 
+							)
+							.then(() => {
+								callback(200, orderData);
+							});
+					} else {
+						callback(400, {'Error': 'Unable to read the user data for the order id\'s.'});
+					}
+				});
+			} else {
+				callback(403, {'Error': 'Missing required token in header, or token is not valid.'});
+			}
+		});
+	} else {
+		callback(400, {'Error': 'Missing Required fields.'});
+	}
+}
+
+orders.getOrderDetails = function  (id) {
+	return new Promise( (resolve) => {
+		// read the order details using id
+		_data.read('orders', id, (err, orderDetails) => {
+			if(!err && orderDetails) {
+				resolve(orderDetails);
+			} else {
+				callback(500, {'Error': 'Unable to read the order details\'s.'});
+			}
+		});
+	});
+} 
+
+
 // export the order module
 module.exports = orders;
